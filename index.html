@@ -339,9 +339,16 @@
 
             const handlePlayerCountSelect = (count) => {
                 setPlayerCount(count);
-                const initialNames = {};
-                for(let i=0; i<count; i++) initialNames[i] = `Jugador ${i+1}`;
-                setNameInputs(initialNames);
+                // Si hi ha noms guardats dels jugadors, els recuperem (si no canvien el nombre total de jugadors)
+                // En cas que canviïn el nombre, es reseteja per defecte per evitar inconsistències.
+                // PERÒ, el requisit és conservar noms. Intentem conservar tants com sigui possible.
+                // nameInputs ja té l'estat anterior si no es reseteja explícitament.
+                // Simplement assegurem que les claus existeixen.
+                const newInputs = {...nameInputs};
+                for(let i=0; i<count; i++) {
+                    if (!newInputs[i]) newInputs[i] = `Jugador ${i+1}`;
+                }
+                setNameInputs(newInputs);
                 setHasRecorder(false);
                 setPhase('setup_names');
             };
@@ -593,12 +600,12 @@
                             <p><strong>Objectiu:</strong> Arribar a la corona (final del track) abans que la vida (cors) arribi a 0.</p>
                             <p><strong>Rols:</strong> 1 Escoltador (endevina), la resta són Sorollosos (fan soroll). Si sou 6+, pot haver-hi 1 Enregistrador (ajuda a recordar).</p>
                             <div><strong>Joc:</strong>
-                                <ul className="list-disc ml-5 mt-1">
-                                    <li>Es reparteixen cartes als Sorollosos.</li>
-                                    <li>L'Escoltador es tapa els ulls.</li>
-                                    <li>Tothom fa el seu soroll durant 13s.</li>
-                                    <li>L'Escoltador destapa les cartes que creu haver sentit.</li>
-                                </ul>
+                                <div className="ml-5 mt-1">
+                                    <p>• Es reparteixen cartes als Sorollosos.</p>
+                                    <p>• L'Escoltador es tapa els ulls.</p>
+                                    <p>• Tothom fa el seu soroll durant 13s.</p>
+                                    <p>• L'Escoltador destapa les cartes que creu haver sentit.</p>
+                                </div>
                             </div>
                             <p><strong>Puntuació:</strong> +1 punt per encert (mou Pacman). Si falles, perds vida segons la posició de la carta (-1, -2 o -3 cors).</p>
                             <p><strong>Fitxes Dobles:</strong> Es desbloquegen a l'avançar. Permeten que un jugador faci 2 sons. Si la vida baixa de 9 o 6, es perden.</p>
